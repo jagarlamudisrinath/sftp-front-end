@@ -1,0 +1,67 @@
+Requirement: Centralized Data Gateway Application
+We aim to develop a Data Gateway Application to streamline and centralize our PGP encryption and decryption processes for Inbound and Outbound file transfers. Currently, these processes are fragmented, making tracking and management inefficient.
+
+Existing Process Overview:
+Vendors upload PGP-encrypted files to our SFTP server, which are then transferred to Azure Storage.
+
+A Python script (running in an Azure Function App) handles PGP decryption for inbound files.
+
+For outbound files, we encrypt them using the vendor’s PGP public key before sending them.
+
+Vendors belong to different vendor types (e.g., Subservicers), and each vendor requires PGP key pair generation and storage.
+
+Currently, there is no centralized system to manage these processes, track file movements, or monitor encryption/decryption activities.
+
+Two Core Processes:
+Inbound Process (PGP Decryption)
+
+Vendors upload PGP-encrypted files to the SFTP server.
+
+Files are transferred to Azure Storage.
+
+A Python script automatically decrypts the files and moves them to the appropriate storage location.
+
+Outbound Process (PGP Encryption)
+
+Files that need to be sent to vendors are PGP-encrypted using their public key.
+
+Encrypted files are uploaded to the SFTP server for vendors to retrieve.
+
+Challenges:
+✅ Decentralized Process – No unified control over encryption, decryption, and file transfers.
+✅ Lack of a Centralized Dashboard – No visibility into file processing, encryption status, or error logs.
+✅ Vendor & Key Management Issues – Each vendor requires a PGP key pair, but key generation and storage are not centralized.
+
+Proposed Solution:
+We want to build a FastAPI-based web application with a UI Dashboard that will:
+✔ Centralize Management – Track vendors, key pairs, file processing, and logs in one place.
+✔ Automate PGP Key Generation & Storage – Generate PGP key pairs for vendors and store them securely in Azure Key Vault.
+✔ Handle File Encryption & Decryption – Manage both Inbound (decryption) and Outbound (encryption) processes.
+✔ Support Ad-hoc Decryption – Allow users to manually decrypt files when needed.
+
+Dashboard & Monitoring Features:
+📌 File Tracking
+
+View all received files (Inbound) and sent files (Outbound) with timestamps.
+
+Track which vendor uploaded/downloaded files.
+
+📌 Encryption & Decryption Statistics
+
+Number of files decrypted (Inbound) and encrypted (Outbound).
+
+Success vs. failure rates for decryption/encryption.
+
+📌 Recent Activity Logs
+
+Monitor real-time file processing status for both Inbound & Outbound.
+
+View logs of recent encryption and decryption activities.
+
+📌 Failure/Error Reports
+
+Display failed decryption and encryption attempts with error details.
+
+Allow manual retry or investigation options for failed operations.
+
+This solution will provide better automation, monitoring, and security, ensuring seamless encryption and decryption workflows while maintaining complete visibility.
