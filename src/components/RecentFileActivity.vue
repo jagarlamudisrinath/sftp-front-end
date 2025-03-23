@@ -1,8 +1,14 @@
 
 <template>
   <v-card class="file-activity-card">
-    <v-card-title class="d-flex align-center pb-4">
+    <v-card-title class="d-flex justify-space-between align-center pb-4">
       Recent File Activity
+      <v-btn
+        icon="mdi-refresh"
+        variant="text"
+        @click="refreshData"
+        :loading="isLoading"
+      ></v-btn>
     </v-card-title>
     <v-card-text>
       <v-table class="file-table" density="comfortable">
@@ -86,10 +92,10 @@
             <td>{{ item.vendor }}</td>
             <td>
               <v-chip
-                :color="item.status === 'Decrypted' ? 'success' : 'info'"
+                :color="getStatusColor(item.status)"
                 size="small"
                 variant="flat"
-                class="font-weight-medium"
+                class="font-weight-medium status-chip"
               >
                 {{ item.status }}
               </v-chip>
@@ -107,6 +113,7 @@ import { ref, computed } from 'vue'
 
 const vendors = ['Vendor 1', 'Vendor 2', 'Vendor 3', 'Vendor 4', 'Vendor 5']
 const statuses = ['Decrypted', 'Processing']
+const isLoading = ref(false)
 
 const selectedVendors = ref([])
 const selectedStatuses = ref([])
@@ -118,6 +125,17 @@ const activityData = ref([
   { id: 4, fileName: 'file_4.pgp', vendor: 'Vendor 4', status: 'Processing', time: new Date().toLocaleString() },
   { id: 5, fileName: 'file_5.pgp', vendor: 'Vendor 5', status: 'Decrypted', time: new Date().toLocaleString() }
 ])
+
+const getStatusColor = (status) => {
+  switch (status) {
+    case 'Decrypted':
+      return 'success-darken-1'
+    case 'Processing':
+      return 'warning'
+    default:
+      return 'grey'
+  }
+}
 
 const toggleVendorFilter = (vendor) => {
   const index = selectedVendors.value.indexOf(vendor)
@@ -135,6 +153,18 @@ const toggleStatusFilter = (status) => {
   } else {
     selectedStatuses.value.splice(index, 1)
   }
+}
+
+const refreshData = async () => {
+  isLoading.value = true
+  // Simulate data refresh
+  setTimeout(() => {
+    activityData.value = activityData.value.map(item => ({
+      ...item,
+      time: new Date().toLocaleString()
+    }))
+    isLoading.value = false
+  }, 1000)
 }
 
 const filteredActivity = computed(() => {
@@ -157,7 +187,7 @@ const filteredActivity = computed(() => {
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.8) !important;
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.12);
 }
 
 .file-table {
@@ -168,6 +198,7 @@ const filteredActivity = computed(() => {
 
 .file-row {
   transition: background-color 0.2s ease;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .file-row:hover {
@@ -186,6 +217,12 @@ const filteredActivity = computed(() => {
   padding: 1.5rem;
 }
 
+.status-chip {
+  font-weight: 600 !important;
+  min-width: 90px;
+  justify-content: center;
+}
+
 :deep(.v-table) {
   box-shadow: none !important;
 }
@@ -195,9 +232,10 @@ const filteredActivity = computed(() => {
   text-transform: uppercase;
   font-size: 0.8rem;
   letter-spacing: 0.5px;
+  padding: 0 16px !important;
 }
 
-:deep(.v-chip) {
-  font-weight: 600 !important;
+:deep(.v-table td) {
+  padding: 12px 16px !important;
 }
 </style>

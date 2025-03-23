@@ -56,3 +56,28 @@
     </v-col>
   </v-row>
 </template>
+<style scoped>
+.stats-card {
+  margin: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  transition: all 0.3s ease;
+}
+
+.stats-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+.v-card-text {
+  padding: 24px !important;
+}
+
+.text-h5 {
+  margin: 16px 0 !important;
+  font-weight: 600;
+}
+
+.text-subtitle-1 {
+  opacity: 0.8;
+}
+</style>
